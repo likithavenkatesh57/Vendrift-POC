@@ -1,0 +1,14 @@
+{
+  "name": "vendrift-full-project-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Realistic multi-file test project for pressure-testing VendriftAI",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.js\""
+  },
+  "dependencies": {
+    "openai": "^4.104.0",
+    "stripe": "^17.7.0"
+  }
+}
