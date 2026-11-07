@@ -1,0 +1,41 @@
+name: CI
+on:
+  push:  
+  pull_request:
+
+jobs:
+  node-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - run: npm test
+  
+  python-security-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pipx install poetry
+      - working-directory: python-security
+        run: poetry install
+      - working-directory: python-security
+        run: poetry run pytest -v
+
+  python-ml-conflict-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pipx install poetry
+      - working-directory: python-ml-conflict
+        run: poetry install
+      - working-directory: python-ml-conflict
+        run: poetry run pytest -v
