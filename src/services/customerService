@@ -1,0 +1,23 @@
+const { SubscriptionService } = require('../billing/subscriptionService');
+const { ContentGenerator } = require('../ai/contentGenerator');
+
+// This file never calls stripe.* or openai.* directly — it only calls its own
+// service classes. A real false-positive test: part of the actual call chain,
+// not an isolated dummy file sitting off to the side.
+class CustomerService {
+  constructor() {
+    this.subscriptions = new SubscriptionService();
+    this.content = new ContentGenerator();
+  }
+
+  async onboardNewCustomer(customerId, priceId, setupToken, setupFeeCents) {
+    await this.subscriptions.chargeSetupFee(setupToken, setupFeeCents);
+    return this.subscriptions.createSubscription(customerId, priceId);
+  }
+
+  async generateWelcomeContent(companyName) {
+    return this.content.generateBlogPost(`welcoming ${companyName} to our platform`);
+  }
+}
+
+module.exports = { CustomerService };
