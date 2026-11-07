@@ -1,0 +1,40 @@
+name: VendriftAI
+on:
+  schedule:
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+  issue_comment:
+    types: [created]
+
+jobs:
+vendriftai:
+  if: >-
+    github.event_name != 'issue_comment' ||
+    startsWith(github.event.comment.body, '/vendriftai')
+  runs-on: ubuntu-latest
+  concurrency:
+    group: vendriftai
+    cancel-in-progress: false
+    pull-requests: write
+    issues: write
+    checks: read
+    statuses: read
+    actions: read
+  steps:
+    # Node is always available to the action itself. Python needs its own
+    # setup here, confirmed directly form the published README: "add the
+    # setup steps for your languages before it."
+    - uses: actions/setup-python@v5
+      with: 
+        python-version: '3.12'
+    - run: pipx install poetry
+    
+    - uses: svudgimath/vendriftai-action@v1
+        with:
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # A personal acces token, not the default GITHUB_TOKEN. Confirmed
+          # from action/index.ts's own comment: commits pushed with a 
+          # workflow's GITHUB_TOKEN don't start other workflows, so CI never
+          # runs on VENDRIFTAI's own fix branches with the default token.
+          # This is what actually lets ci.yml fire on the branches it pushes.
+          token: ${{ secrets.VEMDRIFTAI_PAT }}
