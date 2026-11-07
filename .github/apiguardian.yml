@@ -1,0 +1,11 @@
+version: 1
+
+updates:
+  - vendor: stripe
+    directory: "/"
+    schedule:
+      interval: daily
+  - vendor: openai
+    directory: "/"
+    schedule:
+      interval: daily
