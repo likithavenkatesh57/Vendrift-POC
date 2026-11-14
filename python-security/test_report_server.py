@@ -1,6 +1,6 @@
 from cryptography.fernet import Fernet
 from report_server import (
-    issue_report token,
+    issue_report_token,
     verify_report_token,
     encrypt_report_payload,
     decrypt_report_payload,
@@ -27,4 +27,4 @@ def test_encrypt_decrypt_round_trip():
     original = b"quarterly usage report contents"
     encrypted = encrypt_report_payload(original, key)
     assert encrypted != original
-    assert decrypt_report_payload(encrypted, key) == original 
+    assert decrypt_report_payload(encrypted, key) == original
