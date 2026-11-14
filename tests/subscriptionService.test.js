@@ -18,3 +18,4 @@ test('calculateProratedAmount handles a full month with no proration', () => {
   const result = service.calculateProratedAmount(2900, 31, 31);
   assert.strictEqual(result, 2900);
 });
+
