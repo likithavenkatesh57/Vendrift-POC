@@ -1,18 +1,20 @@
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
+const Stripe = require('stripe');
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
 
 class SubscriptionService {
-  constructor(stripeClient = stripe) {
-    this.stripe = stripeClient;
+  constructor(stripeClient) {
+    this.stripe = stripeClient === undefined ? stripe : stripeClient;
   }
 
   // Deprecated: a one-time setup fee charged the old way, through this.stripe,
   // not a bare module-level call like our earlier tests.
   async chargeSetupFee(customerToken, amountCents) {
-    return this.stripe.charges.create({
+    return this.stripe.paymentIntents.create({
       amount: amountCents,
       currency: 'usd',
-      source: customerToken,
+      payment_method: customerToken,
+      confirm: true,
       description: 'Subscription setup fee',
     });
   }
