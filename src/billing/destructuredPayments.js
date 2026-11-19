@@ -2,7 +2,8 @@
 // mechanically safe (charges.create works fine destructured, no 'this'
 // binding issue). Tests whether detection relies on literal text matching
 // something it can't see here.
-const { charges } = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
+const Stripe = require('stripe');
+const { charges } = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
 
 async function chargeViaDestructure(amountCents, token) {
   return charges.create({
